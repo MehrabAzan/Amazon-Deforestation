@@ -63,8 +63,14 @@ def say(*a):
 
 # ------------------------------------------------------------------ 1. find the data
 tifs = sorted(glob.glob(f"{args.raw}/**/*.tif", recursive=True))
-csvs = (glob.glob(f"{args.raw}/**/train_v2.csv", recursive=True) + glob.glob(f"{args.raw}/**/train_classes.csv", recursive=True)
-        + glob.glob(f"{args.raw}/**/labels_train_v2.csv", recursive=True))
+csvs = [
+    p for p in (
+        glob.glob(f"{args.raw}/**/labels_train_v2.csv", recursive=True)
+        + glob.glob(f"{args.raw}/**/train_v2.csv", recursive=True)
+        + glob.glob(f"{args.raw}/**/train_classes.csv", recursive=True)
+    )
+    if os.path.isfile(p)
+]
 if len(tifs) < 100 or not csvs:
     sys.exit(f"Could not find the TIF data under {args.raw}: {len(tifs)} .tif files, {len(csvs)} csv files.\n"
              "Download train-tif-v2 and train_v2.csv first (see the Kaggle commands in the instructions).")
